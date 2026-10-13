@@ -1,52 +1,50 @@
-# Linkage  
+# Product Linkage and Yeast Classification
 
-Data linkage will be performed on two  datasets and explore different classification algorithms.  
-  
-The project is to be coded in Python 3. Seven (7) relevant data sets will be used:
-  
-• datasets for Data Linkage  
-– amazon.csv  
-– google.csv  
-– amazon google truth.csv  
-– amazon small.csv  
-– google small.csv  
-– amazon google truth small.csv  
-• dataset for Classification: all yeast.csv  
-  
-**Part 1 - Data Linkage** 
-  
-*Na¨ıve data linkage without blocking*  
-Using amazon small.csv and google small.csv, implement the linkage between the two data sets and measure its performance. Comment on your choice of similarity functions, method of deriving a final score, and the threshold for determining if a pair is a match.  
-The performance is evaluated in terms of recall and precision. Ground truth (true matches) are given in amazon google truth small.csv.  
-recall = tp/(tp + fn)  
-precision = tp/(tp + f p)  
-where tp (true-positive) is the number of true positive pairs, f p the number of false positive pairs, tn the number of true negatives, and fn the number of false negative pairs. The four numbers should sum up to the total number of all possible pairs from the two datasets. (n = f p + fn + tp + tn)  
-  
-*Blocking for efficient data linkage*   
-Implement a blocking method for the linkage of the amazon.csv and google.csv data sets and report on your proposed method and the quality of the results of the blocking.  
-To measure the quality of blocking, we assume that when comparing a pair of records, we can always determine if the pair are a match with 100% accuracy. With this assumption:  
-• a record-pair is a true positive if the pair is found in the ground truth set and also the pair are in the same block.  
-• a record-pair is a false positive if the pair co-occur in some block but are not found in the ground truth set.  
-• a record-pair is a false negative if the pair do not co-occur not in any block but are found in the ground truth set.  
-• a record-pair is a true negative if the pair do not co-occur not in any block and are also not found in the ground truth set.  
-Then, the quality of blocking can be evaluated using the following two measures:  
-Pair completeness (P C) = tp/(tp + fn)  
-Reduction ratio (RR) = 1 − (tp + fp)/n  
-where n is the total number of all possible record pairs from the two data sets. (n = f p + fn + tp + tn)    
-  
-**Part 2 - Classification**  
-  
-*Pre-processing*    
-• Impute missing values: Use replacement by mean and replacement by median to fill in missing values. Display the min, median, max, mean and standard deviation for the data with imputations. Justify which imputation method is more suitable.  
-• Scale the features: Explore the use of two transformation techniques (mean centering and standardisation) to scale all attributes after median imputation, and compare their effects. Display the min, median, max, mean and standard deviation for the both types of data scaling.  
-  
-*Comparing Classification Algorithms*  
-compare the performance of the following 3 classification algorithms: k-NN (k=5 and k=10) and Decision tree algorithms on the all yeast dataset.  
-Use the data, all yeast, as transformed in the pre-processing (mean centered, median imputed). Train the classifiers using 2/3 of the data and test the classifiers by applying them to the remaining 1/3 of the data. Use each classification algorithm to predict the Class feature of the data (CYT or non-CYT) using the first 8 features (mcg-nuc).  
+## Overview
 
-*Feature Engineering*  
-In order to achieve higher prediction accuracy for k-NN, one can investigate the use of feature generation and selection to predict the Class feature of the data. Feature generation involves the creation of additional features. Two methods are:  
-• Interaction term pairs. Given a pair of features f1 and f2, create a new feature f12 = f1 × f2 or by f12 = f1 ÷ f2. All possible pairs can be considered.  
-• Clustering labels: apply k-means clustering to the data in all yeast data and then use the resulting cluster labels as the values for a new feature fclusterlabel. At test time, a label for a testing instance can be created by assigning it to its nearest cluster.  
-Given a set of N features (the original features plus generated features), feature selection involves selecting a smaller set of n features (n < N). Here one computes the mutual information between each feature and the class label (on the training data), sorts the features from highest to lowest mutual information value, and then retains the top n features from this ranking, to use for classification with k-NN.  
-In the last, we will evaluate whether the above methods for feature generation and selection, can deliver a boost in prediction accuracy compared to using k-NN just on the original features in all yeast.  
+A coursework notebook comparing handwritten product-linkage heuristics and classical yeast classification/feature-engineering experiments.
+
+## Original Context
+
+Chen Jiang’s original data-analysis coursework. The notebook retains the original weighted Hamming comparisons, price blocks, KNN/entropy-tree models, feature interactions and clustering experiments; the provided VAT helper keeps its attribution. The preserved pre-maintenance snapshot is `32466de4d958bcee41d5f0f8788cf85f8537f3d3`;
+its most recent original commit is dated 2022-01-14. This date describes Git evidence,
+not necessarily the complete implementation period.
+
+## What I Implemented
+
+Attribute-level similarity scoring, best-match selection, price-bucket candidate generation, missing-data summaries, mean centering/standardization, KNN and entropy-tree comparisons, interaction features, cluster-label features and mutual-information selection.
+
+## Technical Approach
+
+The original linkage score and price-bucket concept remain intact. Pair-level evaluation now retains every ground-truth pair, including multiple valid links for one Amazon product, and computes reduction against the full cross-product candidate universe.
+
+A small notebook helper fits medians, centering means, KMeans features and feature selection on training rows only. The original classifiers, interaction formulas, cluster count and fixed split remain recognizable; full-data summaries and elbow plots are descriptive.
+
+## Build / Run
+
+Use Python 3.12: `python3 -m venv .venv`, then `.venv/bin/python -m pip install -r requirements.txt`. Open the original notebook from this directory, or run `.venv/bin/python -B verify_notebook.py` for schema validation, a fresh kernel, HTML/notebook artifacts in `.build/`, and regression tests.
+
+## Testing
+
+- Python 3.12 isolated environment: all 12 code cells executed successfully from a clean kernel.
+- Four regression methods passed: held-out features/labels cannot alter training features, finite/repeated features, numeric price validation, and many-to-many blocking completeness/denominator.
+- Repeated clean-kernel runs produced identical stdout metrics; the elbow figure was visually inspected.
+- Schema validation and the project-local verifier passed. Evidence: Linkage_before_execution.json, Linkage_final_execution.json, Linkage_unit_final.log, Linkage_portable_verification.log.
+
+## 2026 Maintenance
+
+- Repaired modern pandas numeric-price handling and DictVectorizer record orientation; removed unused web-session construction.
+- Corrected best-match evaluation and many-to-many blocking counts.
+- Moved all learned preprocessing and feature selection inside the training boundary; handled zero-denominator interaction features.
+- Pinned tested dependencies and random settings, saved verified notebook outputs, and added a portable clean-kernel verifier plus leakage regressions.
+
+The later work is AI-assisted maintenance, separate from the original implementation.
+The exact original snapshot remains on `archive/handwritten-original`.
+See [AI_PROJECT_REVIEW.md](AI_PROJECT_REVIEW.md) for a technical review.
+
+## Known Limitations
+
+- The reused test split compares many representations; it is not a final independent benchmark after model/feature tuning.
+- Full-data preprocessing summaries and the elbow chart are descriptive and do not justify unbiased predictive claims.
+- Price blocking is a heuristic: observed pair completeness is about 0.948 and comparison reduction about 0.237 on the bundled full linkage data.
+- Dependencies are pinned at tested direct/numerical versions; other transitive packages may still resolve differently.

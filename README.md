@@ -8,6 +8,8 @@ University: University of Melbourne
 
 ## Implementation
 
+The provided VAT helper retains its attribution; Chen implemented the linkage heuristics and classification experiments.
+
 Attribute-level similarity scoring, best-match selection, price-bucket candidate generation, missing-data summaries, mean centering/standardization, KNN and entropy-tree comparisons, interaction features, cluster-label features and mutual-information selection.
 
 ## Technical approach

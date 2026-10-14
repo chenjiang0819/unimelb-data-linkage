@@ -1,5 +1,13 @@
 # Product Linkage and Yeast Classification
 
+## Academic Context
+
+University: University of Melbourne  
+Course: Coursework; exact course number not independently established  
+Year: Exact original submission year not independently established  
+Project type: individual
+
+
 ## Overview
 
 A coursework notebook comparing handwritten product-linkage heuristics and classical yeast classification/feature-engineering experiments.
